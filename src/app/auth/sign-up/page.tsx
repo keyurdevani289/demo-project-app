@@ -18,6 +18,11 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { isEmpty } from "@/hooks/isEmpty";
+import { useAppDispatch } from "@/store/hooks/hooks";
+import { addUser } from "@/store/slices/formSlice";
+import { setCookie } from "@/hooks/useCookie";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 // Signup Component
 const steps = ["Personal Info", "Account Info"];
@@ -107,7 +112,8 @@ export const Signup = () => {
         .min(8, "Password must be at least 8 characters"),
     }),
   ];
-
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -118,7 +124,10 @@ export const Signup = () => {
     validationSchema: validationSchema[activeStep],
     onSubmit: (values) => {
       if (activeStep === steps.length - 1) {
-        console.log("Form submitted:", values);
+        dispatch(addUser(values));
+        setCookie("userToken", values.email);
+        toast.success("you have successfully sign up")
+        router.push("/")
       } else {
         setActiveStep((prev) => prev + 1);
       }
@@ -130,7 +139,16 @@ export const Signup = () => {
   };
 
   return (
-    <Container  component="main" maxWidth="sm" sx={{display: "flex", justifyContent: "center",alignItems: "center",height: "100vh" }} >
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
       <CssBaseline />
       <Paper elevation={3} sx={{ padding: 4, marginTop: 8 }}>
         <Typography component="h1" variant="h5" align="center">
@@ -163,7 +181,7 @@ export const Signup = () => {
                   ? isEmpty(formik.values.firstName) ||
                     isEmpty(formik.values.lastName)
                   : isEmpty(formik.values.email) ||
-                  isEmpty(formik.values.password)
+                    isEmpty(formik.values.password)
               }
             >
               {activeStep === steps.length - 1 ? "Sign Up" : "Next"}

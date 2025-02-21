@@ -14,6 +14,9 @@ import {
 import { styled } from "@mui/material/styles";
 import { Menu, Search, Users, Home, Settings, LogOut } from "lucide-react";
 import Sidebar from "./Sidebar";
+import { Cookies } from "react-cookie-consent";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const SearchWrapper = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,6 +67,18 @@ export default function Layout({
     setSidebarOpen(!sidebarOpen);
   };
 
+  const router = useRouter();
+  const handleSignOut = () => {
+    const cookies = Cookies.get(); // Get all cookies
+    for (let cookie in cookies) {
+      Cookies.remove(cookie); // Remove each cookie
+    }
+    console.log("first");
+    toast.success("You have succesfully signed out");
+
+    router.push("/auth/sign-in");
+  };
+
   return (
     <Box sx={{ minHeight: "100vh" }}>
       <CssBaseline />
@@ -72,16 +87,7 @@ export default function Layout({
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <Toolbar>
-          {/* <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleSidebar}
-            edge="start"
-            sx={{ mr: 2 }}
-          >
-            <Menu />
-          </IconButton> */}
+        <Toolbar sx={{display:"flex" ,justifyContent:"center",alignItems:"center" }}>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Admin Panel
           </Typography>
@@ -98,6 +104,12 @@ export default function Layout({
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             sx={{ ml: 2 }}
           />
+          <Box sx={{ ml: "15px" }}>
+            <Box sx={{ cursor: "pointer" ,display:"flex" }} onClick={() => handleSignOut()}>
+              <LogOut size={24} />
+              <Typography variant={"body1"}>Log out</Typography>
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
 

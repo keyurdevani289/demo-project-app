@@ -1,9 +1,9 @@
-
-
 export interface FormState {
+  users: userData[];
+}
+export interface userData {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
-  step: number;
+  password: string;
 }

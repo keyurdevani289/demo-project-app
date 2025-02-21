@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+"use client";
 import {
+  Box,
+  Divider,
   Drawer,
   List,
-  Toolbar,
-  Divider,
-  Box,
-  Typography,
   ListItemButton,
-  IconButton,
+  Toolbar,
+  Typography,
 } from "@mui/material";
-import { Home, Users, Settings, LogOut, Menu } from "lucide-react";
-import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { Home, LogOut, Settings, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { Cookies } from "react-cookie-consent";
+import toast from "react-hot-toast";
 
 interface SidebarProps {
   open: boolean;
@@ -70,18 +72,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, toggleSidebar }) => {
           </ListItemButton>
         ))}
       </List>
-      <Box sx={{ mt: "auto" }}>
-        <Divider />
-        <ListItemButton>
-          <ListItemIcon>
-            <LogOut size={24} />
-          </ListItemIcon>
-          {/* Only show label when sidebar is open */}
-          {open && <ListItemText primary="Logout" />}
-        </ListItemButton>
-      </Box>
+      
     </Drawer>
   );
 };
 
-export default Sidebar
+export default Sidebar;
