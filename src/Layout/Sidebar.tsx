@@ -1,24 +1,19 @@
 "use client";
 import {
-  Box,
   Divider,
   Drawer,
   List,
   ListItemButton,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Home, LogOut, Settings, Users } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Home, Settings, Users } from "lucide-react";
 import React from "react";
-import { Cookies } from "react-cookie-consent";
-import toast from "react-hot-toast";
 
 interface SidebarProps {
   open: boolean;
-  toggleSidebar: () => void; // Add a function to toggle sidebar
 }
 
 const drawerWidth = 240;
@@ -29,7 +24,7 @@ const menuItems = [
   { icon: Settings, label: "Settings" },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ open, toggleSidebar }) => {
+const Sidebar: React.FC<SidebarProps> = ({ open }) => {
   return (
     <Drawer
       variant="persistent"

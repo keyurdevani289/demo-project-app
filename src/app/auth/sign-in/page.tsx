@@ -19,8 +19,7 @@ import { useRouter } from "next/navigation";
 import { setCookie } from "@/hooks/useCookie";
 import { userData } from "@/types/types";
 
-// Login Component
-export const Login = () => {
+ const Login = () => {
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Required"),
     password: Yup.string().required("Required"),
@@ -117,7 +116,7 @@ export const Login = () => {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="/auth/sign-up">Don't have an account? Sign Up</Link>
+              <Link href="/auth/sign-up">{`Don't have an account? Sign Up`}</Link>
             </Grid>
           </Grid>
         </form>
@@ -127,3 +126,5 @@ export const Login = () => {
 };
 
 export default Login;
+
+

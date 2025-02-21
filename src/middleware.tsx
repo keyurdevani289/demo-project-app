@@ -1,15 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 
-const protectedRoutes: string[] = [
-  "/write-blog",
-  "/your-stories",
-  "/category/for-you",
-  "/library",
-  "/profile-setting",
-  "/notifications",
-  "/payment-history",
-  "/",
-];
+const protectedRoutes: string[] = ["/","/dashoboard"];
 
 export function middleware(req: NextRequest) {
   const isAuthenticated = req.cookies.has("userToken");
@@ -21,5 +12,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: protectedRoutes,
+  matcher:  ["/","/dashoboard"],
 };

@@ -1,22 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
 import {
-  Box,
   AppBar,
-  Toolbar,
-  IconButton,
-  InputBase,
   Avatar,
-  Typography,
+  Box,
   CssBaseline,
+  InputBase,
+  Toolbar,
+  Typography
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Menu, Search, Users, Home, Settings, LogOut } from "lucide-react";
-import Sidebar from "./Sidebar";
-import { Cookies } from "react-cookie-consent";
+import { LogOut, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { Cookies } from "react-cookie-consent";
 import toast from "react-hot-toast";
+import Sidebar from "./Sidebar";
 
 const SearchWrapper = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,10 +61,6 @@ export default function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Function to toggle sidebar
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   const router = useRouter();
   const handleSignOut = () => {
@@ -115,7 +110,7 @@ export default function Layout({
 
       <Box sx={{ display: "flex" }}>
         {/* <---------------------- Sidebar ----------------------> */}
-        <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <Sidebar open={sidebarOpen}  />
 
         {/* <---------------------- Body ----------------------> */}
         <Box

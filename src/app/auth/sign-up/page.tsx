@@ -97,7 +97,7 @@ const SignupStep2: React.FC<{ formik: FormikProps<SignupFormValues> }> = ({
   </Grid>
 );
 
-export const Signup = () => {
+ const Signup = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   const validationSchema = [
