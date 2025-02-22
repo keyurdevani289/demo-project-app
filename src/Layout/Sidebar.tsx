@@ -5,12 +5,13 @@ import {
   List,
   ListItemButton,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Home, Settings, Users } from "lucide-react";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 interface SidebarProps {
   open: boolean;
@@ -19,12 +20,18 @@ interface SidebarProps {
 const drawerWidth = 240;
 
 const menuItems = [
-  { icon: Home, label: "Dashboard" },
-  { icon: Users, label: "Users", active: true },
-  { icon: Settings, label: "Settings" },
+  { icon: Home, label: "Dashboard", path: "/" },
+  { icon: Users, label: "Users", path: "/user-manage" },
+  { icon: Settings, label: "Settings", path: "/setting" },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ open }) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [currentPath, setCurrentPath] = useState(pathname);
+  useEffect(() => {
+    setCurrentPath(pathname);
+  }, [pathname]);
   return (
     <Drawer
       variant="persistent"
@@ -48,8 +55,11 @@ const Sidebar: React.FC<SidebarProps> = ({ open }) => {
       <List>
         {menuItems.map((item, index) => (
           <ListItemButton
+            onClick={() => {
+              router.push(item.path);
+            }}
             key={index}
-            selected={item.active}
+            selected={item.path === currentPath}
             sx={{
               "&.Mui-selected": {
                 backgroundColor: "primary.light",
@@ -67,7 +77,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open }) => {
           </ListItemButton>
         ))}
       </List>
-      
     </Drawer>
   );
 };
