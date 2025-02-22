@@ -22,7 +22,7 @@ const drawerWidth = 240;
 const menuItems = [
   { icon: Home, label: "Dashboard", path: "/" },
   { icon: Users, label: "Users", path: "/user-manage" },
-  { icon: Settings, label: "Settings", path: "/setting" },
+  
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ open }) => {

@@ -1,5 +1,9 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+
 import {
   Table,
   TableBody,
@@ -12,46 +16,56 @@ import {
   TablePagination,
   Chip,
   Box,
-} from '@mui/material';
-
-// Mock data
-const mockUsers = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  role: i % 2 === 0 ? 'Admin' : 'User',
-  status: i % 3 === 0 ? 'Active' : 'Inactive',
-}));
+  CircularProgress,
+  Typography,
+} from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
+import { fetchUsers } from "@/store/slices/userSlice";
 
 const UserTable: React.FC = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchTerm, setSearchTerm] = useState('');
+  const dispatch = useAppDispatch();
+  const { users, total, loading, error, page, rowsPerPage, searchTerm } = useAppSelector((state) => state.users);
 
-  const filteredUsers = mockUsers.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    dispatch(fetchUsers({ page: page + 1, perPage: rowsPerPage }));
+  }, [dispatch, page, rowsPerPage]);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Paper sx={{ width: '100%', mb: 2 }}>
+    <Paper sx={{ width: "100%", mb: 2 }}>
       <Box sx={{ p: 2 }}>
         <TextField
           fullWidth
           variant="outlined"
           placeholder="Search users..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => dispatch({ type: "users/setSearchTerm", payload: e.target.value })}
           size="small"
         />
       </Box>
@@ -66,39 +80,27 @@ const UserTable: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredUsers
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((user) => (
-                <TableRow
-                  hover
-                  key={user.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {user.name}
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={user.status}
-                      color={user.status === 'Active' ? 'success' : 'error'}
-                      size="small"
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+            {users.map((user) => (
+              <TableRow hover key={user.id}>
+                <TableCell>{user.first_name} {user.last_name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role || "User"}</TableCell>
+                <TableCell>
+                  <Chip label="Active" color="success" size="small" />
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredUsers.length}
+        count={total}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={(event, newPage) => dispatch({ type: "users/setPage", payload: newPage })}
+        onRowsPerPageChange={(event) => dispatch({ type: "users/setRowsPerPage", payload: parseInt(event.target.value, 10) })}
       />
     </Paper>
   );

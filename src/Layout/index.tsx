@@ -7,11 +7,11 @@ import {
   CssBaseline,
   InputBase,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { LogOut, Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Cookies } from "react-cookie-consent";
 import toast from "react-hot-toast";
@@ -60,7 +60,7 @@ export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
+  const pathname = usePathname();
 
   const router = useRouter();
   const handleSignOut = () => {
@@ -73,6 +73,13 @@ export default function Layout({
 
     router.push("/auth/sign-in");
   };
+  const formatPathname = (pathname :string) => {
+    const name = pathname === "/" ? "Dashboard" : pathname.split("/")[1];
+    return name
+      .split("-") // Split by hyphen
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+      .join(" "); // Join without hyphens
+  };
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
@@ -82,25 +89,26 @@ export default function Layout({
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <Toolbar sx={{display:"flex" ,justifyContent:"center",alignItems:"center" }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Admin Panel
           </Typography>
-          <SearchWrapper>
-            <SearchIconWrapper>
-              <Search size={20} />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </SearchWrapper>
+          
           <Avatar
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            sx={{ ml: 2 }}
+            sx={{ mr: 2 }}
           />
           <Box sx={{ ml: "15px" }}>
-            <Box sx={{ cursor: "pointer" ,display:"flex" }} onClick={() => handleSignOut()}>
+            <Box
+              sx={{ cursor: "pointer", display: "flex" }}
+              onClick={() => handleSignOut()}
+            >
               <LogOut size={24} />
               <Typography variant={"body1"}>Log out</Typography>
             </Box>
@@ -110,7 +118,7 @@ export default function Layout({
 
       <Box sx={{ display: "flex" }}>
         {/* <---------------------- Sidebar ----------------------> */}
-        <Sidebar open={sidebarOpen}  />
+        <Sidebar open={sidebarOpen} />
 
         {/* <---------------------- Body ----------------------> */}
         <Box
@@ -123,8 +131,8 @@ export default function Layout({
             overflowY: "auto",
           }}
         >
-          <Typography variant="h4" sx={{ mb: 3 }}>
-            User Management
+          <Typography variant="h5" sx={{ mb: 3 }}>
+            {formatPathname(pathname)}
           </Typography>
           {children}
         </Box>

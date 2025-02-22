@@ -14,6 +14,8 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import formReducer from "./slices/formSlice";
+import dashboardReducer from "./slices/dashboardSlice";
+import userReducer from "./slices/userSlice";
 
 export interface PersistedState {
   form: ReturnType<typeof formReducer>;
@@ -47,6 +49,8 @@ const preloadedState = loadState();
 
 const store = configureStore({
   reducer: {
+    users: userReducer,
+    dashboard: dashboardReducer,
     form: formReducer,
   },
   preloadedState,
