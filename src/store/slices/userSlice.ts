@@ -16,7 +16,7 @@ interface UserState {
   error: string | null;
   page: number;
   rowsPerPage: number;
-  searchTerm: string;
+
 }
 
 const initialState: UserState = {
@@ -26,7 +26,7 @@ const initialState: UserState = {
   error: null,
   page: 0,
   rowsPerPage: 10,
-  searchTerm: "",
+  
 };
 
 export const fetchUsers = createAsyncThunk(
@@ -52,10 +52,7 @@ const userSlice = createSlice({
     },
     setRowsPerPage: (state, action: PayloadAction<number>) => {
       state.rowsPerPage = action.payload;
-    },
-    setSearchTerm: (state, action: PayloadAction<string>) => {
-      state.searchTerm = action.payload;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -75,5 +72,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setPage, setRowsPerPage, setSearchTerm } = userSlice.actions;
+export const { setPage, setRowsPerPage } = userSlice.actions;
 export default userSlice.reducer;
